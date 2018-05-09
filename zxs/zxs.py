@@ -167,16 +167,26 @@ def visualize(target, preds):
 # Function to translate data
 def transform(data, **kwargs):
     
-    # Transform the date
-    data[kwargs['date']] = data[kwargs['date']].apply(pd.to_datetime) 
+    # Check optional parameters
+    if kwargs['date'] is None:
+        pass
+    else:
+        # Transform the date
+        data[kwargs['date']] = data[kwargs['date']].apply(pd.to_datetime) 
     
-    # Convert numeric columns
-    num_cols = kwargs['num_cols']
-    data[num_cols] = data[num_cols].apply(pd.to_numeric, errors = 'coerce', axis = 1)
+    if kwargs['drop_cols'] is None:
+        pass
+    else:
+        # Drop unnecessary columns
+        drop_cols = kwargs['drop_cols']
+        data.drop(drop_cols, axis = 1, inplace = True)        
 
-    # Drop unnecessary columns
-    drop_cols = kwargs['drop_cols']
-    data.drop(drop_cols, axis = 1, inplace = True)
+    if kwargs['num_cols'] is None:
+        pass
+    else:
+        # Convert numeric columns
+        num_cols = kwargs['num_cols']
+        data[num_cols] = data[num_cols].apply(pd.to_numeric, errors = 'coerce', axis = 1)
 
     # Select Categories
     cats = data.columns[data.dtypes.eq('object')]
